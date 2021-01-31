@@ -1,4 +1,4 @@
 package messaging
 
-class Telegram {
+class TelegramBot {
 }
