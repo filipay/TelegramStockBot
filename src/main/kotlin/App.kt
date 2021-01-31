@@ -23,8 +23,9 @@ class App(
 }
 
 fun main() {
+    val bot = TelegramBot()
     val clock = Clock.systemUTC()
-    val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofSeconds(5))
+    val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofSeconds(5), bot)
     val telegramEventListener = TelegramEventListener(listOf(telegramDailySummaryEvent))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
