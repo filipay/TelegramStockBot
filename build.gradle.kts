@@ -1,6 +1,11 @@
 plugins {
     java
     kotlin("jvm") version "1.4.10"
+    application
+}
+
+application {
+    mainClass.set("AppKt")
 }
 
 group = "org.example"
@@ -16,7 +21,7 @@ sourceSets {
         java.srcDir("src/main/kotlin")
     }
     test {
-        java.srcDir("src/main/kotlin")
+        java.srcDir("src/test/kotlin")
     }
 }
 
@@ -32,4 +37,18 @@ dependencies {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "AppKt"
+    }
+
+    // To add all of the dependencies
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }
