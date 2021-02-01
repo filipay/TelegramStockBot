@@ -68,7 +68,7 @@ fun main() {
     val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
     val telegramEventListener = TelegramEventListener(listOf(telegramDailyPeriodicEvent, telegramMarketClosedEvent))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
-    val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
+    val processor = YahooStockProcessor(listOf("GME", "BB"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))
     app.run()
 }
