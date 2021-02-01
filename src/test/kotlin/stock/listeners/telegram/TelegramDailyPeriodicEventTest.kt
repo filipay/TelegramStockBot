@@ -4,14 +4,19 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
 
-internal class TelegramDailySummaryEventTest {
+internal class TelegramDailyPeriodicEventTest {
     private val instant: Instant = Instant.ofEpochMilli(0)
+    private val telegramEvent: TelegramEvent<StockEvent> = mockk {
+        every { accept(any()) } returns true
+    }
+    private val bot: TelegramLongPollingBot = mockk(relaxed = true)
     private val period: Duration = mockk(relaxed = true)
-    private val telegramDailySummaryEvent = TelegramDailySummaryEvent(instant, period)
+    private val telegramDailySummaryEvent = TelegramDailyPeriodicEvent(instant, period, bot, telegramEvent)
 
     @Test
     fun `should accept if the event is outside period`() {

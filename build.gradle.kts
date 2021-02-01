@@ -31,7 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.telegram:telegrambots:5.0.1")
 
-    testImplementation("i   o.mockk:mockk:1.10.5")
+    testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }

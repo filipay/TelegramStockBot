@@ -3,16 +3,19 @@ package stock.listeners.telegram
 import ifTrue
 import messaging.BotConfig
 import messaging.TelegramBot
+import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
+import java.util.Calendar
 
-class TelegramDailySummaryEvent(
+class TelegramDailyPeriodicEvent(
     private var previousEvent: Instant,
     private val period: Duration,
-    private val bot: TelegramBot
-    ): TelegramEvent<StockEvent> {
+    private val bot: TelegramLongPollingBot,
+    private val telegramDayMarketEvent: TelegramEvent<StockEvent>
+): TelegramEvent<StockEvent> {
 
     override fun onEvent(event: StockEvent) {
         val message = SendMessage.builder()
@@ -23,7 +26,8 @@ class TelegramDailySummaryEvent(
     }
 
     override fun accept(event: StockEvent): Boolean =
-        (Duration.between(previousEvent, event.instant).toMillis() > period.toMillis()).ifTrue {
+        telegramDayMarketEvent.accept(event) && (Duration.between(previousEvent, event.instant).toMillis() > period.toMillis()).ifTrue {
             previousEvent = event.instant
         }
+
 }

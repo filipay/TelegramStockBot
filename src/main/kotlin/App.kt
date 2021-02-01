@@ -10,7 +10,8 @@ import messaging.handlers.TextTelegramHandler
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 import stock.adapter.YahooFinanceAdapter
-import stock.listeners.telegram.TelegramDailySummaryEvent
+import stock.listeners.telegram.TelegramDailyPeriodicEvent
+import stock.listeners.telegram.TelegramDayMarketEvent
 import stock.listeners.telegram.TelegramEventListener
 import stock.listeners.telegram.TelegramMarketClosedEvent
 import stock.processor.Event
@@ -62,9 +63,10 @@ fun main() {
     telegramBotsAPI.registerBot(telegramBot)
     val clock = Clock.systemUTC()
     val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-    val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofMinutes(10), telegramBot)
+    val telegramDayMarketEvent = TelegramDayMarketEvent(calendar)
+    val telegramDailyPeriodicEvent = TelegramDailyPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, telegramDayMarketEvent)
     val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
-    val telegramEventListener = TelegramEventListener(listOf(telegramDailySummaryEvent, telegramMarketClosedEvent))
+    val telegramEventListener = TelegramEventListener(listOf(telegramDailyPeriodicEvent, telegramMarketClosedEvent))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))
