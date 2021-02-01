@@ -28,6 +28,7 @@ class App(
 fun main() {
     val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
     val telegramBot = TelegramBot()
+    val cal = Calendar.getInstance()
     telegramBotsAPI.registerBot(telegramBot)
     val clock = Clock.systemUTC()
     val calendar = Calendar.getInstance()
@@ -36,6 +37,10 @@ fun main() {
     val telegramEventListener = TelegramEventListener(listOf(telegramDailySummaryEvent, telegramMarketClosedEvent))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
-    val app = App(clock, processor, Duration.ofSeconds(2))
+    var app = when(cal.get(Calendar.HOUR_OF_DAY)){
+        in 15..22 -> App(clock, processor, Duration.ofSeconds(900))
+        else -> App(clock, processor, Duration.ofSeconds(9000000))
+    }
+
     app.run()
 }

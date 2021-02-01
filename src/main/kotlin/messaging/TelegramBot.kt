@@ -8,7 +8,7 @@ class TelegramBot : TelegramLongPollingBot() {
     private val paperHands = setOf("sell","sold","thinking","selling")
     override fun getBotToken(): String = BotConfig.API_TOKEN
 
-    override fun getBotUsername(): String = "tradeMaster"
+    override fun getBotUsername(): String = "WSBot"
 
     override fun onUpdateReceived(update: Update) {
         if (update.hasMessage() && update.message.hasText()) {
