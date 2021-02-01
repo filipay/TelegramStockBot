@@ -30,6 +30,7 @@ dependencies {
     implementation("com.yahoofinance-api:YahooFinanceAPI:3.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.telegram:telegrambots:5.0.1")
+    implementation("com.google.code.gson:gson:2.8.6")
 
     testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

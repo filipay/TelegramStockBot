@@ -1,5 +1,6 @@
 package stock.listeners.telegram
 
+import configuration.Config
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
@@ -15,8 +16,9 @@ internal class TelegramDailyPeriodicEventTest {
         every { accept(any()) } returns true
     }
     private val bot: TelegramLongPollingBot = mockk(relaxed = true)
+    private val config: Config = mockk(relaxed = true)
     private val period: Duration = mockk(relaxed = true)
-    private val telegramDailySummaryEvent = TelegramDailyPeriodicEvent(instant, period, bot, telegramEvent)
+    private val telegramDailySummaryEvent = TelegramDailyPeriodicEvent(instant, period, bot, config, telegramEvent)
 
     @Test
     fun `should accept if the event is outside period`() {

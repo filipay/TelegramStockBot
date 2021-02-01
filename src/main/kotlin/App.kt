@@ -1,3 +1,5 @@
+import com.google.gson.Gson
+import configuration.ConfigProvider
 import messaging.Emojis.DIAMOND
 import messaging.Emojis.MOON
 import messaging.Emojis.OPEN_HANDS
@@ -45,7 +47,7 @@ fun main() {
     val clock = Clock.systemUTC()
     val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
-
+    val config = ConfigProvider(Gson()).getConfig("${System.getProperty("user.dir")}/src/main/resources/config.json")
     val paperHands = TriggerWordHandler(
         setOf("sell","sold","thinking","selling", "sell?", "read", "reading"),
         listOf("$TOILET_PAPER$OPEN_HANDS"),
@@ -68,11 +70,11 @@ fun main() {
             "/stock" to stockCommandTelegramHandler
         ))
     )
-    val telegramBot = TelegramBot(telegramHandlers)
+    val telegramBot = TelegramBot(config, telegramHandlers)
     val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
     telegramBotsAPI.registerBot(telegramBot)
     val telegramDayMarketEvent = TelegramDayMarketEvent(calendar)
-    val telegramDailyPeriodicEvent = TelegramDailyPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, telegramDayMarketEvent)
+    val telegramDailyPeriodicEvent = TelegramDailyPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, config, telegramDayMarketEvent)
     val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
     val telegramEventListener = TelegramEventListener(listOf(telegramDailyPeriodicEvent, telegramMarketClosedEvent))
     val processor = YahooStockProcessor(listOf("GME", "BB"), listOf(telegramEventListener), yahooFinanceAdaptor)
