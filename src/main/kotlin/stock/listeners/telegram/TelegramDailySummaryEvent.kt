@@ -17,7 +17,7 @@ class TelegramDailySummaryEvent(
     override fun onEvent(event: StockEvent) {
         val message = SendMessage.builder()
             .chatId(BotConfig.CHAT_TOKEN)
-            .text("${event.stock}")
+            .text("${event.stock.name}: ${event.stock.quote}")
             .build()
         bot.execute(message)
     }
