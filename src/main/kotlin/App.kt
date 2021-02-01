@@ -26,11 +26,15 @@ class App(
 }
 
 fun main() {
+    val locale = Locale("en", "IE")
+    val timeZone = TimeZone.getTimeZone("Europe/Dublin")
+
+    val clock = Clock.systemUTC()
+    val cal = Calendar.getInstance(timeZone, locale)
+
     val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
     val telegramBot = TelegramBot()
-    val cal = Calendar.getInstance()
     telegramBotsAPI.registerBot(telegramBot)
-    val clock = Clock.systemUTC()
     val calendar = Calendar.getInstance()
     val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofSeconds(5), telegramBot)
     val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
@@ -38,7 +42,7 @@ fun main() {
     val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
     var app = when(cal.get(Calendar.HOUR_OF_DAY)){
-        in 15..22 -> App(clock, processor, Duration.ofSeconds(900))
+        in 14..21 -> App(clock, processor, Duration.ofSeconds(900))
         else -> App(clock, processor, Duration.ofSeconds(9000000))
     }
 
