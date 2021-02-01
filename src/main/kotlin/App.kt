@@ -1,6 +1,10 @@
+import messaging.TelegramBot
+import org.telegram.telegrambots.meta.TelegramBotsApi
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 import stock.adapter.YahooFinanceAdapter
 import stock.listeners.telegram.TelegramDailySummaryEvent
 import stock.listeners.telegram.TelegramEventListener
+import stock.listeners.telegram.TelegramMarketClosedEvent
 import stock.processor.Event
 import stock.processor.YahooStockProcessor
 import java.time.Clock
@@ -16,17 +20,20 @@ class App(
 ) {
     fun run() {
         Timer().schedule(0, pollingFrequency.toMillis()) {
-            println(clock.instant())
             processor.process(Event(clock.instant()))
         }
     }
 }
 
 fun main() {
-    val bot = TelegramBot()
+    val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
+    val telegramBot = TelegramBot()
+    telegramBotsAPI.registerBot(telegramBot)
     val clock = Clock.systemUTC()
-    val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofSeconds(5), bot)
-    val telegramEventListener = TelegramEventListener(listOf(telegramDailySummaryEvent))
+    val calendar = Calendar.getInstance()
+    val telegramDailySummaryEvent = TelegramDailySummaryEvent(Instant.now(), Duration.ofSeconds(5), telegramBot)
+    val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
+    val telegramEventListener = TelegramEventListener(listOf(telegramDailySummaryEvent, telegramMarketClosedEvent))
     val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))

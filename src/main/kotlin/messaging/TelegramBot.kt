@@ -1,23 +1,25 @@
-import messaging.BotConfig.API_TOKEN
-import messaging.BotConfig.CHAT_TOKEN
-import java.net.HttpURLConnection
-import java.net.URL
+package messaging
 
+import org.telegram.telegrambots.bots.TelegramLongPollingBot
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.objects.Update
 
-class TelegramBot {
+class TelegramBot : TelegramLongPollingBot() {
+    private val paperHands = setOf("sell","sold","thinking","selling")
+    override fun getBotToken(): String = BotConfig.API_TOKEN
 
-    val token = API_TOKEN
-    val chat = CHAT_TOKEN
+    override fun getBotUsername(): String = "tradeMaster"
 
-    fun sendMessage(message : String){
-        val send="https://api.telegram.org/bot" +
-                token +
-                "/sendMessage?parse_mode=MarkdownV2&disable_notification=true&chat_id=" +
-                chat +
-                "&text=" +
-                message
-
-        URL(send).readText()
+    override fun onUpdateReceived(update: Update) {
+        if (update.hasMessage() && update.message.hasText()) {
+            val words = update.message.text.toLowerCase().split(" ")
+            if (words.any { paperHands.contains(it) }) {
+                val message = SendMessage.builder()
+                    .chatId("${update.message.chatId}")
+                    .text("\uD83E\uDDFB\uD83D\uDC50")
+                    .build()
+                execute(message)
+            }
+        }
     }
-
 }
