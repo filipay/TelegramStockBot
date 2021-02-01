@@ -1,5 +1,7 @@
-package messaging.handlers
+package messaging.handlers.text
 
+import messaging.handlers.ConditionalTelegramHandler
+import messaging.handlers.TelegramHandler
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.objects.Update
 

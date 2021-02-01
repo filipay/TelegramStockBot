@@ -8,8 +8,7 @@ class TelegramMarketClosedEvent(private val calendar: Calendar) : TelegramEvent<
         const val MARKET_CLOSE_UTC = 15
     }
     private var dailyEventTriggered = false
-    override fun onEvent(event: StockEvent) {
-    }
+    override fun onEvent(event: StockEvent) = Unit
 
     override fun accept(event: StockEvent): Boolean {
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)

@@ -5,8 +5,10 @@ import messaging.Emojis.RAISE_HANDS
 import messaging.Emojis.ROCKET
 import messaging.Emojis.TOILET_PAPER
 import messaging.TelegramBot
-import messaging.handlers.TriggerWordHandler
-import messaging.handlers.TextTelegramHandler
+import messaging.handlers.commands.CommandTelegramHandler
+import messaging.handlers.commands.StockCommandTelegramHandler
+import messaging.handlers.text.TriggerWordHandler
+import messaging.handlers.text.TextTelegramHandler
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 import stock.adapter.YahooFinanceAdapter
@@ -40,6 +42,10 @@ class App(
 
 fun main() {
     val random = Random.Default
+    val clock = Clock.systemUTC()
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    val yahooFinanceAdaptor = YahooFinanceAdapter()
+
     val paperHands = TriggerWordHandler(
         setOf("sell","sold","thinking","selling", "sell?", "read", "reading"),
         listOf("$TOILET_PAPER$OPEN_HANDS"),
@@ -55,19 +61,20 @@ fun main() {
         listOf("Ah get the boat", "Rats out", "Suck a poo", "GME TO THE MOOON BBY $ROCKET$ROCKET$ROCKET$MOON$MOON"),
         random
     )
+    val stockCommandTelegramHandler = StockCommandTelegramHandler(yahooFinanceAdaptor)
     val telegramHandlers = listOf(
-        TextTelegramHandler(listOf(paperHands, diamondHands, wallyResponse))
+        TextTelegramHandler(listOf(paperHands, diamondHands, wallyResponse)),
+        CommandTelegramHandler(mapOf(
+            "/stock" to stockCommandTelegramHandler
+        ))
     )
     val telegramBot = TelegramBot(telegramHandlers)
     val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
     telegramBotsAPI.registerBot(telegramBot)
-    val clock = Clock.systemUTC()
-    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     val telegramDayMarketEvent = TelegramDayMarketEvent(calendar)
     val telegramDailyPeriodicEvent = TelegramDailyPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, telegramDayMarketEvent)
     val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
     val telegramEventListener = TelegramEventListener(listOf(telegramDailyPeriodicEvent, telegramMarketClosedEvent))
-    val yahooFinanceAdaptor = YahooFinanceAdapter()
     val processor = YahooStockProcessor(listOf("GME", "BB"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))
     app.run()
