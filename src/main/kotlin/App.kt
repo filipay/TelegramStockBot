@@ -17,7 +17,6 @@ import stock.adapter.YahooFinanceAdapter
 import stock.listeners.telegram.TelegramPeriodicEvent
 import stock.listeners.telegram.TelegramTimeRestrictedEvent
 import stock.listeners.telegram.TelegramEventListener
-import stock.listeners.telegram.TelegramMarketClosedEvent
 import stock.processor.Event
 import stock.processor.YahooStockProcessor
 import java.time.Clock
@@ -80,7 +79,7 @@ fun main() {
     val telegramAfterMarketUpdateEvent = TelegramTimeRestrictedEvent(calendar, 21..23, telegram30MinuteUpdate)
     val telegramPreMarketUpdateEvent = TelegramTimeRestrictedEvent(calendar, 9..13, telegram30MinuteUpdate)
     val telegramEventListener = TelegramEventListener(listOf(telegramDayMarketUpdateEvent, telegramAfterMarketUpdateEvent, telegramPreMarketUpdateEvent))
-    val processor = YahooStockProcessor(listOf("GME", "BB"), listOf(telegramEventListener), yahooFinanceAdaptor)
+    val processor = YahooStockProcessor(listOf("GME"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))
     app.run()
 }
