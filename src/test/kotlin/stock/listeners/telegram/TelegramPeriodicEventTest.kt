@@ -10,25 +10,22 @@ import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
 
-internal class TelegramDailyPeriodicEventTest {
+internal class TelegramPeriodicEventTest {
     private val instant: Instant = Instant.ofEpochMilli(0)
-    private val telegramEvent: TelegramEvent<StockEvent> = mockk {
-        every { accept(any()) } returns true
-    }
     private val bot: TelegramLongPollingBot = mockk(relaxed = true)
     private val config: Config = mockk(relaxed = true)
     private val period: Duration = mockk(relaxed = true)
-    private val telegramDailySummaryEvent = TelegramDailyPeriodicEvent(instant, period, bot, config, telegramEvent)
+    private val telegramPeriodicEvent = TelegramPeriodicEvent(instant, period, bot, config)
 
     @Test
     fun `should accept if the event is outside period`() {
         every { period.toMillis() } returns 5
-        assertTrue(telegramDailySummaryEvent.accept(StockEvent(mockk(), Instant.ofEpochMilli(10))))
+        assertTrue(telegramPeriodicEvent.accept(StockEvent(mockk(), Instant.ofEpochMilli(10))))
     }
 
     @Test
     fun `should reject if the event is inside period`() {
         every { period.toMillis() } returns 15
-        assertFalse(telegramDailySummaryEvent.accept(StockEvent(mockk(), Instant.ofEpochMilli(10))))
+        assertFalse(telegramPeriodicEvent.accept(StockEvent(mockk(), Instant.ofEpochMilli(10))))
     }
 }

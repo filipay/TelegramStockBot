@@ -8,12 +8,11 @@ import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
 
-class TelegramDailyPeriodicEvent(
+class TelegramPeriodicEvent(
     private var previousEvent: Instant,
     private val period: Duration,
     private val bot: TelegramLongPollingBot,
-    private val config: Config,
-    private val telegramDayMarketEvent: TelegramEvent<StockEvent>
+    private val config: Config
 ): TelegramEvent<StockEvent> {
 
     override fun onEvent(event: StockEvent) {
@@ -25,7 +24,7 @@ class TelegramDailyPeriodicEvent(
     }
 
     override fun accept(event: StockEvent): Boolean =
-        telegramDayMarketEvent.accept(event) && (Duration.between(previousEvent, event.instant).toMillis() > period.toMillis()).ifTrue {
+        (Duration.between(previousEvent, event.instant).toMillis() > period.toMillis()).ifTrue {
             previousEvent = event.instant
         }
 

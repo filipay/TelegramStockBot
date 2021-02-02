@@ -14,8 +14,8 @@ import messaging.handlers.text.TextTelegramHandler
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 import stock.adapter.YahooFinanceAdapter
-import stock.listeners.telegram.TelegramDailyPeriodicEvent
-import stock.listeners.telegram.TelegramDayMarketEvent
+import stock.listeners.telegram.TelegramPeriodicEvent
+import stock.listeners.telegram.TelegramTimeRestrictedEvent
 import stock.listeners.telegram.TelegramEventListener
 import stock.listeners.telegram.TelegramMarketClosedEvent
 import stock.processor.Event
@@ -74,10 +74,12 @@ fun main() {
     val telegramBot = TelegramBot(config, telegramHandlers)
     val telegramBotsAPI = TelegramBotsApi(DefaultBotSession::class.java)
     telegramBotsAPI.registerBot(telegramBot)
-    val telegramDayMarketEvent = TelegramDayMarketEvent(calendar)
-    val telegramDailyPeriodicEvent = TelegramDailyPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, config, telegramDayMarketEvent)
-    val telegramMarketClosedEvent = TelegramMarketClosedEvent(calendar)
-    val telegramEventListener = TelegramEventListener(listOf(telegramDailyPeriodicEvent, telegramMarketClosedEvent))
+    val telegram10MinuteUpdate = TelegramPeriodicEvent(Instant.now(), Duration.ofMinutes(10), telegramBot, config)
+    val telegram30MinuteUpdate = TelegramPeriodicEvent(Instant.now(), Duration.ofMinutes(30), telegramBot, config)
+    val telegramDayMarketUpdateEvent = TelegramTimeRestrictedEvent(calendar, 14..21, telegram10MinuteUpdate)
+    val telegramAfterMarketUpdateEvent = TelegramTimeRestrictedEvent(calendar, 22..23, telegram30MinuteUpdate)
+    val telegramPreMarketUpdateEvent = TelegramTimeRestrictedEvent(calendar, 9..13, telegram30MinuteUpdate)
+    val telegramEventListener = TelegramEventListener(listOf(telegramDayMarketUpdateEvent, telegramAfterMarketUpdateEvent, telegramPreMarketUpdateEvent))
     val processor = YahooStockProcessor(listOf("GME", "BB"), listOf(telegramEventListener), yahooFinanceAdaptor)
     val app = App(clock, processor, Duration.ofSeconds(2))
     app.run()
