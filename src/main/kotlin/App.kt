@@ -67,7 +67,8 @@ fun main() {
     val telegramHandlers = listOf(
         TextTelegramHandler(listOf(paperHands, diamondHands, wallyResponse)),
         CommandTelegramHandler(mapOf(
-            "/stock" to stockCommandTelegramHandler
+            "/stock" to stockCommandTelegramHandler,
+            "/stonk" to stockCommandTelegramHandler
         ))
     )
     val telegramBot = TelegramBot(config, telegramHandlers)
