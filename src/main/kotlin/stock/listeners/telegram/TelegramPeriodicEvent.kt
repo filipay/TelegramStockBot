@@ -14,7 +14,7 @@ class TelegramPeriodicEvent(
     private val bot: TelegramLongPollingBot,
     private val config: Config
 ): TelegramEvent<StockEvent> {
-
+    private val stockEvents = mutableMapOf<String, Instant>()
     override fun onEvent(event: StockEvent) {
         val message = SendMessage.builder()
             .chatId(config.chatId)
@@ -24,8 +24,9 @@ class TelegramPeriodicEvent(
     }
 
     override fun accept(event: StockEvent): Boolean =
-        (Duration.between(previousEvent, event.instant).toMillis() > period.toMillis()).ifTrue {
-            previousEvent = event.instant
-        }
+        (Duration.between(stockEvents[event.stock.name] ?: previousEvent, event.instant).toMillis() > period.toMillis())
+            .ifTrue {
+                stockEvents[event.stock.name] = event.instant
+            }
 
 }
