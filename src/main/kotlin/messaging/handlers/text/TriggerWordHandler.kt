@@ -16,7 +16,7 @@ class TriggerWordHandler(
         if (words.any { triggerWords.contains(it) }) {
             val message = SendMessage.builder()
                 .chatId("${update.message.chatId}")
-                .text(responses[random.nextInt(0, responses.size)])
+                .text(responses[random.nextInt(0, responses.size)].replaceFirst("<user>", update.message.from.firstName))
                 .build()
             bot.execute(message)
         }

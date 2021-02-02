@@ -50,17 +50,17 @@ fun main() {
     val config = ConfigProvider(Gson()).getConfig("${System.getProperty("user.dir")}/src/main/resources/config.json")
     val paperHands = TriggerWordHandler(
         setOf("sell","sold","thinking","selling", "sell?", "read", "reading"),
-        listOf("$TOILET_PAPER$OPEN_HANDS"),
+        listOf("$TOILET_PAPER$OPEN_HANDS","HOLD AND BUY ONLY $ROCKET$ROCKET", "<user> \"PAPER HANDS\" $TOILET_PAPER$OPEN_HANDS"),
         random
     )
     val diamondHands = TriggerWordHandler(
         setOf("buy","buy?","buying","bought","got","yolo","hold", "hodl"),
-        listOf("$DIAMOND$RAISE_HANDS"),
+        listOf("$DIAMOND$RAISE_HANDS", "$ROCKET$ROCKET$ROCKET$MOON$MOON"),
         random
     )
     val wallyResponse = TriggerWordHandler(
         setOf("amc", "silver", "ref", "ref?", "reference", "source"),
-        listOf("Ah get the boat", "Rats out", "Suck a poo", "GME TO THE MOOON BBY $ROCKET$ROCKET$ROCKET$MOON$MOON"),
+        listOf("Ah get the boat", "Rats out", "Suck a poo", "Such a SCAM!", "GME TO THE MOOON BBY $ROCKET$ROCKET$ROCKET$MOON$MOON"),
         random
     )
     val stockCommandTelegramHandler = StockCommandTelegramHandler(yahooFinanceAdaptor)
