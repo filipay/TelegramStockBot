@@ -1,6 +1,5 @@
 # Project exclude paths
 /.gradle/
 /.idea/
-/gradle/
 /build/
 /src/main/resources/config.json
