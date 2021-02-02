@@ -3,3 +3,4 @@
 /.idea/
 /gradle/
 /build/
+/src/main/resources/config.json
