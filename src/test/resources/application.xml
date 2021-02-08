@@ -26,4 +26,9 @@
     <bean id="now" class="java.time.Instant" factory-method="ofEpochMilli">
         <constructor-arg name="epochMilli" value="0"/>
     </bean>
+
+    <bean id="config" class="configuration.Config">
+        <constructor-arg name="apiToken" value="1234567890:blah"/>
+        <constructor-arg name="chatId" value="-987654321"/>
+    </bean>
 </beans>

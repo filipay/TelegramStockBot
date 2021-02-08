@@ -3,7 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <import resource="telegram-formatters.xml"/>
     <context:property-placeholder location="spring-configuration/properties/*"/>
+
     <bean id="textTelegramHandler" class="messaging.handlers.text.TextTelegramHandler">
         <constructor-arg name="textHandlers">
             <list>
@@ -19,6 +21,7 @@
         <constructor-arg name="random" ref="random"/>
         <constructor-arg name="triggerWords" value="#{'${paperHandWords}'.split(',')}"/>
         <constructor-arg name="responses" value="#{'${paperHandResponses}'.split(',')}"/>
+        <constructor-arg name="formatter" ref="noOpFormatter"/>
     </bean>
 
     <bean id="diamondHandsHandler" class="messaging.handlers.text.TriggerWordHandler">
@@ -26,6 +29,7 @@
         <constructor-arg name="random" ref="random"/>
         <constructor-arg name="triggerWords" value="#{'${diamondHandWords}'.split(',')}"/>
         <constructor-arg name="responses" value="#{'${diamondHandResponses}'.split(',')}"/>
+        <constructor-arg name="formatter" ref="noOpFormatter"/>
     </bean>
 
     <bean id="distractionsHandler" class="messaging.handlers.text.TriggerWordHandler">
@@ -33,6 +37,7 @@
         <constructor-arg name="random" ref="random"/>
         <constructor-arg name="triggerWords" value="#{'${distractingWords}'.split(',')}"/>
         <constructor-arg name="responses" value="#{'${wallyResponses}'.split(',')}"/>
+        <constructor-arg name="formatter" ref="noOpFormatter"/>
     </bean>
 
     <bean id="commandTelegramHandlers" class="messaging.handlers.commands.CommandTelegramHandler">
