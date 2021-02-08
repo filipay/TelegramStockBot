@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="telegram-handlers.xml"/>
+    <bean name="messenger" class="messaging.TelegramBotMessenger">
+        <constructor-arg name="config" ref="config"/>
+    </bean>
+
+    <bean name="bot" class="messaging.TelegramBot">
+        <constructor-arg name="config" ref="config"/>
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="telegramHandlers">
+            <list>
+                <ref bean="textTelegramHandler"/>
+                <ref bean="commandTelegramHandlers"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="telegramBotsAPI" class="org.telegram.telegrambots.meta.TelegramBotsApi">
+        <constructor-arg name="botSessionClass" value="org.telegram.telegrambots.updatesreceivers.DefaultBotSession"/>
+    </bean>
+
+    <bean factory-bean="telegramBotsAPI" factory-method="registerBot">
+        <constructor-arg name="bot" ref="bot"/>
+    </bean>
+</beans>

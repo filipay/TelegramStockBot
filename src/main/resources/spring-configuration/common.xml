@@ -1,0 +1,24 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="clock" class="java.time.Clock" factory-method="systemUTC"/>
+    <bean id="utcTimeZone" class="java.util.TimeZone" factory-method="getTimeZone">
+        <constructor-arg name="ID">
+            <value type="java.lang.String">UTC</value>
+        </constructor-arg>
+    </bean>
+    <bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+        <constructor-arg name="zone" ref="utcTimeZone"/>
+    </bean>
+
+    <bean name="gson" class="com.google.gson.Gson"/>
+    <bean name="configProvider" class="configuration.ConfigProvider">
+        <constructor-arg name="gson" ref="gson"/>
+    </bean>
+    <bean name="config" factory-bean="configProvider" factory-method="getConfig">
+        <constructor-arg name="path" value="src/main/resources/config.json"/>
+    </bean>
+
+    <bean id="random" class="kotlin.random.Random.Default"/>
+</beans>

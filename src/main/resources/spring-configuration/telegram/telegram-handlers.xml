@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="spring-configuration/properties/*"/>
+    <bean id="textTelegramHandler" class="messaging.handlers.text.TextTelegramHandler">
+        <constructor-arg name="textHandlers">
+            <list>
+                <ref bean="paperHandsHandler"/>
+                <ref bean="diamondHandsHandler"/>
+                <ref bean="distractionsHandler"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="paperHandsHandler" class="messaging.handlers.text.TriggerWordHandler">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="random" ref="random"/>
+        <constructor-arg name="triggerWords" value="#{'${paperHandWords}'.split(',')}"/>
+        <constructor-arg name="responses" value="#{'${paperHandResponses}'.split(',')}"/>
+    </bean>
+
+    <bean id="diamondHandsHandler" class="messaging.handlers.text.TriggerWordHandler">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="random" ref="random"/>
+        <constructor-arg name="triggerWords" value="#{'${diamondHandWords}'.split(',')}"/>
+        <constructor-arg name="responses" value="#{'${diamondHandResponses}'.split(',')}"/>
+    </bean>
+
+    <bean id="distractionsHandler" class="messaging.handlers.text.TriggerWordHandler">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="random" ref="random"/>
+        <constructor-arg name="triggerWords" value="#{'${distractingWords}'.split(',')}"/>
+        <constructor-arg name="responses" value="#{'${wallyResponses}'.split(',')}"/>
+    </bean>
+
+    <bean id="commandTelegramHandlers" class="messaging.handlers.commands.CommandTelegramHandler">
+        <constructor-arg name="handlerStrategy">
+            <map>
+                <entry key="/stonk" value-ref="stockCommandTelegramHandler"/>
+                <entry key="/stock" value-ref="stockCommandTelegramHandler"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="stockCommandTelegramHandler" class="messaging.handlers.commands.StockCommandTelegramHandler">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="yahooFinanceAdapter" ref="yahooFinanceAdapter"/>
+    </bean>
+</beans>

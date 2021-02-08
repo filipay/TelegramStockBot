@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="file:src/main/resources/spring-configuration/application.xml"/>
+    <import resource="telegram-bot.xml"/>
+    <bean id="timer" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="java.util.Timer"/>
+    </bean>
+
+    <bean id="yahooFinanceAdapter" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="stock.adapter.YahooFinanceAdapter"/>
+        <constructor-arg name="relaxed" value="true"/>
+    </bean>
+
+    <bean id="calendar" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="java.util.Calendar"/>
+        <constructor-arg name="relaxed" value="true"/>
+    </bean>
+
+    <bean id="clock" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="java.time.Clock"/>
+        <constructor-arg name="relaxed" value="true"/>
+    </bean>
+
+    <bean id="now" class="java.time.Instant" factory-method="ofEpochMilli">
+        <constructor-arg name="epochMilli" value="0"/>
+    </bean>
+</beans>

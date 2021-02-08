@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="common.xml"/>
+    <import resource="telegram/telegram-bot.xml"/>
+    <import resource="stock/event-dispatchers.xml"/>
+
+    <bean id="timer" class="java.util.Timer"/>
+    <bean id="pollingFrequency" class="java.time.Duration" factory-method="ofSeconds">
+        <constructor-arg name="seconds" value="2"/>
+    </bean>
+
+    <bean name="yahooFinanceAdapter" class="stock.adapter.YahooFinanceAdapter"/>
+    <bean id="processor" class="stock.processor.YahooStockProcessor">
+        <constructor-arg name="dispatchers">
+            <list>
+                <ref bean="telegramEventDispatcher"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="stocks">
+            <list>
+                <value>GME</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="yahooFinanceAdapter" ref="yahooFinanceAdapter"/>
+    </bean>
+    <bean id="app" class="App">
+        <constructor-arg name="timer" ref="timer"/>
+        <constructor-arg name="clock" ref="clock"/>
+        <constructor-arg name="pollingFrequency" ref="pollingFrequency"/>
+        <constructor-arg name="processor" ref="processor"/>
+    </bean>
+</beans>

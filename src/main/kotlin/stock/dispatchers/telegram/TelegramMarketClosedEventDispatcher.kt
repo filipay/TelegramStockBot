@@ -1,9 +1,9 @@
-package stock.listeners.telegram
+package stock.dispatchers.telegram
 
 import stock.processor.StockEvent
 import java.util.*
 
-class TelegramMarketClosedEvent(private val calendar: Calendar) : TelegramEvent<StockEvent> {
+class TelegramMarketClosedEventDispatcher(private val calendar: Calendar) : ConditionalEventDispatcher<StockEvent> {
     companion object {
         const val MARKET_CLOSE_UTC = 15
     }

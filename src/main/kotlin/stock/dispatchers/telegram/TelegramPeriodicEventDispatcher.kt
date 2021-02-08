@@ -1,26 +1,24 @@
-package stock.listeners.telegram
+package stock.dispatchers.telegram
 
-import configuration.Config
 import ifTrue
-import org.telegram.telegrambots.bots.TelegramLongPollingBot
+import messaging.TelegramBotMessenger
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
 
-class TelegramPeriodicEvent(
+class TelegramPeriodicEventDispatcher(
     private var previousEvent: Instant,
     private val period: Duration,
-    private val bot: TelegramLongPollingBot,
-    private val config: Config
-): TelegramEvent<StockEvent> {
+    private val messenger: TelegramBotMessenger
+): ConditionalEventDispatcher<StockEvent> {
     private val stockEvents = mutableMapOf<String, Instant>()
     override fun onEvent(event: StockEvent) {
         val message = SendMessage.builder()
-            .chatId(config.chatId)
+            .chatId(messenger.getChatId())
             .text("${event.stock.name}: ${event.stock.quote}")
             .build()
-        bot.execute(message)
+        messenger.execute(message)
     }
 
     override fun accept(event: StockEvent): Boolean =
