@@ -7,7 +7,6 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 sourceSets {
@@ -21,6 +20,7 @@ sourceSets {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("com.yahoofinance-api:YahooFinanceAPI:3.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.telegram:telegrambots:5.0.1")

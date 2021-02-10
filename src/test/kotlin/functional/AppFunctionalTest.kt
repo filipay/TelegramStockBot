@@ -18,7 +18,7 @@ class AppFunctionalTest: BaseFunctionalTest() {
 
         app.run()
 
-        verify { messenger.execute(capture(messages)) }
+        verify { messenger.executeAsync(capture(messages)) }
         assertEquals(1, messages.size)
     }
 
@@ -30,7 +30,7 @@ class AppFunctionalTest: BaseFunctionalTest() {
 
         app.run()
 
-        verify { messenger.execute(capture(messages)) }
+        verify { messenger.executeAsync(capture(messages)) }
         assertEquals(1, messages.size)
     }
 }

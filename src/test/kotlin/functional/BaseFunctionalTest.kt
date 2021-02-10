@@ -47,7 +47,7 @@ open class BaseFunctionalTest {
             (firstArg() as Runnable).run()
         }
 
-        every { messenger.execute(any<SendMessage>()) } returns mockk()
+        every { messenger.executeAsync(any<SendMessage>()) } returns mockk()
 
         every { adapter.stocks(any()) } answers {
             mapOf("GME" to mockk {

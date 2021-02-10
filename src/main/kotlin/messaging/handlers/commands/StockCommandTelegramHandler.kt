@@ -17,7 +17,7 @@ class StockCommandTelegramHandler(
             .chatId(update.message.chatId.toString())
             .text("${stock.name}: ${stock.quote}")
             .build()
-        messenger.execute(message)
+        messenger.executeAsync(message)
 
     }
 }
