@@ -12,13 +12,13 @@
         <constructor-arg name="zone" ref="utcTimeZone"/>
     </bean>
 
-    <bean name="gson" class="com.google.gson.Gson"/>
-    <bean name="configProvider" class="configuration.ConfigProvider">
-        <constructor-arg name="gson" ref="gson"/>
+    <bean name="envVarResolver" class="configuration.EnvironmentVariableResolver"/>
+
+    <bean name="envVarConfigProvider" class="configuration.EnvironmentVariableConfigProvider">
+        <constructor-arg name="environmentVariableResolver" ref="envVarResolver"/>
     </bean>
-    <bean name="config" factory-bean="configProvider" factory-method="getConfig">
-        <constructor-arg name="path" value="src/main/resources/config.json"/>
-    </bean>
+
+    <bean name="config" factory-bean="envVarConfigProvider" factory-method="getConfig"/>
 
     <bean id="random" class="kotlin.random.Random.Default"/>
 </beans>

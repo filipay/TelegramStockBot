@@ -1,5 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version "1.4.10"
+    application
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 group = "org.example"
@@ -7,15 +11,11 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://plugins.gradle.org/m2/")
 }
 
-sourceSets {
-    main {
-        java.srcDir("src/main/kotlin")
-    }
-    test {
-        java.srcDir("src/test/kotlin")
-    }
+application {
+    mainClass.set("AppKt")
 }
 
 dependencies {
@@ -40,16 +40,7 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-tasks.withType<Jar> {
-    manifest {
-        attributes["Main-Class"] = "AppKt"
-    }
-
-    // To add all of the dependencies
-    from(sourceSets.main.get().output)
-
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+project.setProperty("mainClassName", "AppKt")
+tasks.named<ShadowJar>("shadowJar") {
+    archiveBaseName.set("shadow")
 }
