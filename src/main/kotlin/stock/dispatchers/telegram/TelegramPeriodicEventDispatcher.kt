@@ -1,21 +1,20 @@
 package stock.dispatchers.telegram
 
 import ifTrue
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import messaging.TelegramBotMessenger
+import org.apache.logging.log4j.LogManager
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
-import org.telegram.telegrambots.meta.bots.AbsSender
 import stock.processor.StockEvent
 import java.time.Duration
 import java.time.Instant
-import java.util.concurrent.CompletableFuture
+import java.util.Date
 
 class TelegramPeriodicEventDispatcher(
     private var previousEvent: Instant,
     private val period: Duration,
     private val messenger: TelegramBotMessenger
 ): ConditionalEventDispatcher<StockEvent> {
+    private val logger = LogManager.getLogger(TelegramPeriodicEventDispatcher::class.java)
     private val stockEvents = mutableMapOf<String, Instant>()
     override fun onEvent(event: StockEvent) {
         val message = SendMessage.builder()
@@ -28,6 +27,7 @@ class TelegramPeriodicEventDispatcher(
     override fun accept(event: StockEvent): Boolean =
         (Duration.between(stockEvents[event.stock.name] ?: previousEvent, event.instant).toMillis() > period.toMillis())
             .ifTrue {
+                logger.info("Period: ${period.toMinutes()} min, date: ${Date(event.instant.toEpochMilli())}")
                 stockEvents[event.stock.name] = event.instant
             }
 

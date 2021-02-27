@@ -1,3 +1,4 @@
+import org.apache.logging.log4j.LogManager
 import org.springframework.context.support.ClassPathXmlApplicationContext
 import stock.processor.Event
 import stock.processor.YahooStockProcessor
@@ -12,14 +13,15 @@ class App(
     private val processor: YahooStockProcessor,
     private val pollingFrequency: Duration
 ) {
+    private val logger = LogManager.getLogger(App::class.java)
+
     fun run() {
-        println("${this.javaClass}: Running")
+        logger.info("Starting processing with polling frequency of: ${pollingFrequency.seconds}s")
         timer.schedule(0, pollingFrequency.toMillis()) {
             runCatching {
                 processor.process(Event(clock.instant()))
             }.onFailure {
-                println(it.message)
-                println(it.stackTraceToString())
+                logger.error("Process failed", it)
             }
         }
     }

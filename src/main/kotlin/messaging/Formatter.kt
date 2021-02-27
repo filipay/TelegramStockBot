@@ -5,5 +5,5 @@ interface Formatter<T>  {
 }
 
 class NoOpFormatter: Formatter<String> {
-    override fun format(payload: String): String = payload.also { println(it) }
+    override fun format(payload: String): String = payload
 }
