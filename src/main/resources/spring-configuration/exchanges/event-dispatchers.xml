@@ -27,6 +27,13 @@
         <constructor-arg name="formatter" ref="tickerFormatter"/>
     </bean>
 
+    <bean id="telegram30MinuteEvent2" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="period" ref="30minutePeriod"/>
+        <constructor-arg name="previousEvent" ref="now"/>
+        <constructor-arg name="formatter" ref="tickerFormatter"/>
+    </bean>
+
     <bean name="dayTradingHoursRange" class="kotlin.ranges.IntRange">
         <constructor-arg name="start" value="14"/>
         <constructor-arg name="endInclusive" value="20"/>
@@ -56,7 +63,7 @@
 
     <bean id="preMarketTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
         <constructor-arg name="calendar" ref="calendar"/>
-        <constructor-arg name="delegate" ref="telegram30MinuteEvent"/>
+        <constructor-arg name="delegate" ref="telegram30MinuteEvent2"/>
         <constructor-arg name="range" ref="preMarketTradingHoursRange"/>
     </bean>
 

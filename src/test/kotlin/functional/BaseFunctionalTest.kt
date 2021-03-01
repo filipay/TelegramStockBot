@@ -1,6 +1,7 @@
 package functional
 
 import App
+import exchanges.adapter.KrakenExchangeAdapter
 import exchanges.adapter.YahooFinanceAdapter
 import io.mockk.every
 import io.mockk.mockk
@@ -30,7 +31,10 @@ open class BaseFunctionalTest {
     protected lateinit var messenger: TelegramBotMessenger
 
     @Autowired
-    protected lateinit var adapter: YahooFinanceAdapter
+    protected lateinit var yahooFinanceAdapter: YahooFinanceAdapter
+
+    @Autowired
+    protected lateinit var krakenExchangeAdapter: KrakenExchangeAdapter
 
     @Autowired
     protected lateinit var calendar: Calendar
@@ -49,8 +53,10 @@ open class BaseFunctionalTest {
 
         every { messenger.execute(any<SendMessage>()) } returns mockk()
 
-        every { adapter.stocks(any()) } answers {
-            mapOf("GME" to mockk(relaxed = true))
-        }
+        every { yahooFinanceAdapter.stocks(any()) } returns mapOf("GME" to mockk(relaxed = true))
+
+        every { krakenExchangeAdapter.cryptos(any()) } returns listOf(mockk(relaxed = true) {
+            every { name } returns "BTC/EUR"
+        })
     }
 }

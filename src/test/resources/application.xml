@@ -13,6 +13,11 @@
         <constructor-arg name="relaxed" value="true"/>
     </bean>
 
+    <bean id="krakenExchangeAdapter" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="exchanges.adapter.KrakenExchangeAdapter"/>
+        <constructor-arg name="relaxed" value="true"/>
+    </bean>
+
     <bean id="calendar" class="Mocker" factory-method="mockk">
         <constructor-arg name="mockType" value="java.util.Calendar"/>
         <constructor-arg name="relaxed" value="true"/>

@@ -18,8 +18,8 @@ class AppFunctionalTest: BaseFunctionalTest() {
 
         app.run()
 
-        verify { messenger.execute(capture(messages)) }
-        assertEquals(1, messages.size)
+        verify(exactly = 2) { messenger.execute(capture(messages)) }
+        assertEquals(2, messages.size)
     }
 
     @Test
@@ -30,7 +30,19 @@ class AppFunctionalTest: BaseFunctionalTest() {
 
         app.run()
 
-        verify { messenger.execute(capture(messages)) }
-        assertEquals(1, messages.size)
+        verify(exactly = 2) { messenger.execute(capture(messages)) }
+        assertEquals(2, messages.size)
+    }
+
+    @Test
+    fun `should emit a pre market time event`() {
+        val messages = mutableListOf<SendMessage>()
+        every { calendar.get(Calendar.HOUR_OF_DAY)} returns 10
+        every { clock.instant() } returns Instant.ofEpochMilli(Duration.ofHours(1).toMillis())
+
+        app.run()
+
+        verify(exactly = 2) { messenger.execute(capture(messages)) }
+        assertEquals(2, messages.size)
     }
 }
