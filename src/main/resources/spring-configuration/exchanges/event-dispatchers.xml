@@ -8,21 +8,23 @@
     </bean>
 
     <bean name="30minutePeriod" class="java.time.Duration" factory-method="ofMinutes">
-        <constructor-arg name="minutes" value="10"/>
+        <constructor-arg name="minutes" value="1"/>
     </bean>
 
     <bean name="now" class="java.time.Instant" factory-method="now"/>
 
-    <bean id="telegram10MinuteEvent" class="stock.dispatchers.telegram.TelegramPeriodicEventDispatcher">
+    <bean id="telegram10MinuteEvent" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
         <constructor-arg name="messenger" ref="messenger"/>
         <constructor-arg name="period" ref="10minutePeriod"/>
         <constructor-arg name="previousEvent" ref="now"/>
+        <constructor-arg name="formatter" ref="tickerFormatter"/>
     </bean>
 
-    <bean id="telegram30MinuteEvent" class="stock.dispatchers.telegram.TelegramPeriodicEventDispatcher">
+    <bean id="telegram30MinuteEvent" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
         <constructor-arg name="messenger" ref="messenger"/>
         <constructor-arg name="period" ref="30minutePeriod"/>
         <constructor-arg name="previousEvent" ref="now"/>
+        <constructor-arg name="formatter" ref="tickerFormatter"/>
     </bean>
 
     <bean name="dayTradingHoursRange" class="kotlin.ranges.IntRange">
@@ -35,19 +37,19 @@
         <constructor-arg name="endInclusive" value="23"/>
     </bean>
 
-    <bean id="dayTradingEventDispatcher" class="stock.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
+    <bean id="dayTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
         <constructor-arg name="calendar" ref="calendar"/>
         <constructor-arg name="delegate" ref="telegram10MinuteEvent"/>
         <constructor-arg name="range" ref="dayTradingHoursRange"/>
     </bean>
 
-    <bean id="afterMarketTradingEventDispatcher" class="stock.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
+    <bean id="afterMarketTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
         <constructor-arg name="calendar" ref="calendar"/>
         <constructor-arg name="delegate" ref="telegram30MinuteEvent"/>
         <constructor-arg name="range" ref="afterMarketTradingHoursRange"/>
     </bean>
 
-    <bean id="telegramEventDispatcher" class="stock.dispatchers.telegram.TelegramEventDispatcher">
+    <bean id="telegramEventDispatcher" class="exchanges.dispatchers.telegram.TelegramEventDispatcher">
         <constructor-arg name="eventDispatchers">
             <list>
                 <ref bean="dayTradingEventDispatcher"/>

@@ -44,7 +44,7 @@
         <constructor-arg name="handlerStrategy">
             <map>
                 <entry key="/stonk" value-ref="stockCommandTelegramHandler"/>
-                <entry key="/stock" value-ref="stockCommandTelegramHandler"/>
+                <entry key="/crypto" value-ref="cryptoCommandTelegramHandler"/>
             </map>
         </constructor-arg>
     </bean>
@@ -52,5 +52,12 @@
     <bean id="stockCommandTelegramHandler" class="messaging.handlers.commands.StockCommandTelegramHandler">
         <constructor-arg name="messenger" ref="messenger"/>
         <constructor-arg name="yahooFinanceAdapter" ref="yahooFinanceAdapter"/>
+        <constructor-arg name="formatter" ref="tickerFormatter"/>
+    </bean>
+
+    <bean id="cryptoCommandTelegramHandler" class="messaging.handlers.commands.CryptoCommandTelegramHandler">
+        <constructor-arg name="messenger" ref="messenger"/>
+        <constructor-arg name="krakenExchangeAdapter" ref="krakenExchangeAdapter"/>
+        <constructor-arg name="formatter" ref="tickerFormatter"/>
     </bean>
 </beans>

@@ -1,16 +1,16 @@
-package stock.dispatchers.telegram
+package exchanges.dispatchers.telegram
 
-import stock.processor.StockEvent
-import java.util.*
+import exchanges.TickerEvent
+import java.util.Calendar
 
-class TelegramMarketClosedEventDispatcher(private val calendar: Calendar) : ConditionalEventDispatcher<StockEvent> {
+class TelegramMarketClosedEventDispatcher(private val calendar: Calendar) : ConditionalEventDispatcher<TickerEvent> {
     companion object {
         const val MARKET_CLOSE_UTC = 15
     }
     private var dailyEventTriggered = false
-    override fun onEvent(event: StockEvent) = Unit
+    override fun onEvent(event: TickerEvent) = Unit
 
-    override fun accept(event: StockEvent): Boolean {
+    override fun accept(event: TickerEvent): Boolean {
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         return when {
             hourOfDay == MARKET_CLOSE_UTC && !dailyEventTriggered -> true

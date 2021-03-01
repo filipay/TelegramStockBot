@@ -9,7 +9,7 @@
     </bean>
 
     <bean id="yahooFinanceAdapter" class="Mocker" factory-method="mockk">
-        <constructor-arg name="mockType" value="stock.adapter.YahooFinanceAdapter"/>
+        <constructor-arg name="mockType" value="exchanges.adapter.YahooFinanceAdapter"/>
         <constructor-arg name="relaxed" value="true"/>
     </bean>
 

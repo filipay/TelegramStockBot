@@ -24,9 +24,9 @@ dependencies {
     implementation("com.yahoofinance-api:YahooFinanceAPI:3.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.telegram:telegrambots:5.0.1")
-    implementation("com.google.code.gson:gson:2.8.6")
     implementation("org.springframework:spring-core:5.3.3")
     implementation("org.springframework:spring-context:5.3.3")
+    implementation("org.knowm.xchange:xchange-kraken:5.0.6")
     implementation("org.apache.logging.log4j:log4j-api:2.14.0")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
 

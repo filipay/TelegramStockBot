@@ -1,6 +1,7 @@
 package functional
 
 import App
+import exchanges.adapter.YahooFinanceAdapter
 import io.mockk.every
 import io.mockk.mockk
 import messaging.TelegramBotMessenger
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
-import stock.adapter.YahooFinanceAdapter
 import java.time.Clock
 import java.time.Instant
 import java.util.Calendar
@@ -47,13 +47,10 @@ open class BaseFunctionalTest {
             (firstArg() as Runnable).run()
         }
 
-        every { messenger.executeAsync(any<SendMessage>()) } returns mockk()
+        every { messenger.execute(any<SendMessage>()) } returns mockk()
 
         every { adapter.stocks(any()) } answers {
-            mapOf("GME" to mockk {
-                every { name } returns "GME"
-                every { quote } returns mockk(relaxed = true)
-            })
+            mapOf("GME" to mockk(relaxed = true))
         }
     }
 }

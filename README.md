@@ -1,5 +1,5 @@
 # Telegram Stock Bot [![Build Status](https://travis-ci.org/filipay/TelegramStockBot.svg?branch=master)](https://travis-ci.org/filipay/TelegramStockBot)
-This bot allows you to get up to date stock info in your Telegram chat
+This bot allows you to get up to date exchanges info in your Telegram chat
 
 ## Setup
 Clone the repo

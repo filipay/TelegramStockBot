@@ -1,16 +1,18 @@
-package stock.processor
+package exchanges.processor
 
+import exchanges.Event
+import exchanges.TickerEvent
+import exchanges.adapter.YahooFinanceAdapter
+import exchanges.dispatchers.EventDispatcher
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import stock.adapter.YahooFinanceAdapter
-import stock.dispatchers.EventDispatcher
 import java.time.Instant
 
 internal class YahooStockProcessorTest {
-    private val eventDispatcher1: EventDispatcher<StockEvent> = mockk(relaxed = true)
-    private val eventDispatcher2: EventDispatcher<StockEvent> = mockk(relaxed = true)
+    private val eventDispatcher1: EventDispatcher<TickerEvent> = mockk(relaxed = true)
+    private val eventDispatcher2: EventDispatcher<TickerEvent> = mockk(relaxed = true)
     private val yahooFinanceAdapter: YahooFinanceAdapter = mockk {
         every { stocks(any()) } returns mapOf("POO" to mockk())
     }

@@ -27,7 +27,7 @@ class TriggerWordHandler(
                 .text(formatter.format(responses[random.nextInt(0, responses.size)].replaceFirst("<user>", update.message.from.firstName)))
                 .parseMode(MARKDOWNV2)
                 .build()
-            messenger.executeAsync(message)
+            messenger.execute(message)
         }
     }
 }

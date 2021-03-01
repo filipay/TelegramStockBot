@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="exchangeFactory" class="org.knowm.xchange.ExchangeFactory" factory-method="valueOf">
+        <constructor-arg name="name" value="INSTANCE"/>
+    </bean>
+
+    <bean name="krakenClient" factory-bean="exchangeFactory" factory-method="createExchange">
+        <constructor-arg name="exchangeClassName" value="org.knowm.xchange.kraken.KrakenExchange"/>
+        <constructor-arg name="apiKey" value="null"/>
+        <constructor-arg name="secretKey" value="null"/>
+    </bean>
+
+    <bean name="krakenMapper" class="exchanges.KrakenMapper"/>
+
+    <bean name="krakenExchangeAdapter" class="exchanges.adapter.KrakenExchangeAdapter">
+        <constructor-arg name="client" ref="krakenClient"/>
+        <constructor-arg name="mapper" ref="krakenMapper"/>
+    </bean>
+
+    <bean name="yahooFinanceMapper" class="exchanges.YahooFinanceMapper"/>
+
+    <bean name="yahooFinanceAdapter" class="exchanges.adapter.YahooFinanceAdapter">
+        <constructor-arg name="mapper" ref="yahooFinanceMapper"/>
+    </bean>
+</beans>

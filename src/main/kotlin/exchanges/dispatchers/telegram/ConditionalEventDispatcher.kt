@@ -1,6 +1,6 @@
-package stock.dispatchers.telegram
+package exchanges.dispatchers.telegram
 
-import stock.dispatchers.EventDispatcher
+import exchanges.dispatchers.EventDispatcher
 
 interface ConditionalEventDispatcher<T>: EventDispatcher<T> {
     fun accept(event: T): Boolean

@@ -1,26 +1,26 @@
 package messaging.handlers.commands
 
 import exchanges.Ticker
-import exchanges.adapter.YahooFinanceAdapter
+import exchanges.adapter.KrakenExchangeAdapter
 import messaging.Formatter
 import messaging.handlers.TelegramHandler
-import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWNV2
+import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.bots.AbsSender
 
-class StockCommandTelegramHandler(
+class CryptoCommandTelegramHandler(
     private val messenger: AbsSender,
-    private val yahooFinanceAdapter: YahooFinanceAdapter,
+    private val krakenExchangeAdapter: KrakenExchangeAdapter,
     private val formatter: Formatter<Ticker>
 ): TelegramHandler {
     override fun handle(update: Update) {
-        val (_, stockName) = update.message.text.split("\\s".toRegex())
-        val ticker = yahooFinanceAdapter.stock(stockName)
+        val (_, cryptoSymbol) = update.message.text.split("\\s".toRegex())
+        val ticker = krakenExchangeAdapter.crypto(cryptoSymbol)
         val message = SendMessage.builder()
             .chatId(update.message.chatId.toString())
             .text(formatter.format(ticker))
-            .parseMode(MARKDOWNV2)
+            .parseMode(ParseMode.MARKDOWNV2)
             .build()
         messenger.execute(message)
     }
