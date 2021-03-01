@@ -6,6 +6,7 @@ import ifTrue
 import messaging.Formatter
 import messaging.TelegramBotMessenger
 import org.apache.logging.log4j.LogManager
+import org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWNV2
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import java.time.Duration
 import java.time.Instant
@@ -22,6 +23,7 @@ class TelegramPeriodicEventDispatcher(
     override fun onEvent(event: TickerEvent) {
         val message = SendMessage.builder()
             .chatId(messenger.getChatId())
+            .parseMode(MARKDOWNV2)
             .text(formatter.format(event.ticker))
             .build()
         messenger.execute(message)

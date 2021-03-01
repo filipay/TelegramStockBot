@@ -35,7 +35,7 @@
         </constructor-arg>
         <constructor-arg name="cryptos">
             <list>
-                <value>XRP</value>
+                <value>XMR</value>
                 <value>NANO</value>
                 <value>DOT</value>
                 <value>XLM</value>
@@ -52,6 +52,7 @@
         <constructor-arg name="processors">
             <list>
                 <ref bean="yahooStockProcessor"/>
+                <ref bean="krakenExchangeProcessor"/>
             </list>
         </constructor-arg>
     </bean>

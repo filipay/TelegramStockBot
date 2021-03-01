@@ -8,7 +8,7 @@
     </bean>
 
     <bean name="30minutePeriod" class="java.time.Duration" factory-method="ofMinutes">
-        <constructor-arg name="minutes" value="1"/>
+        <constructor-arg name="minutes" value="30"/>
     </bean>
 
     <bean name="now" class="java.time.Instant" factory-method="now"/>
@@ -37,6 +37,11 @@
         <constructor-arg name="endInclusive" value="23"/>
     </bean>
 
+    <bean name="preMarketTradingHoursRange" class="kotlin.ranges.IntRange">
+        <constructor-arg name="start" value="9"/>
+        <constructor-arg name="endInclusive" value="13"/>
+    </bean>
+
     <bean id="dayTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
         <constructor-arg name="calendar" ref="calendar"/>
         <constructor-arg name="delegate" ref="telegram10MinuteEvent"/>
@@ -49,9 +54,16 @@
         <constructor-arg name="range" ref="afterMarketTradingHoursRange"/>
     </bean>
 
+    <bean id="preMarketTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
+        <constructor-arg name="calendar" ref="calendar"/>
+        <constructor-arg name="delegate" ref="telegram30MinuteEvent"/>
+        <constructor-arg name="range" ref="preMarketTradingHoursRange"/>
+    </bean>
+
     <bean id="telegramEventDispatcher" class="exchanges.dispatchers.telegram.TelegramEventDispatcher">
         <constructor-arg name="eventDispatchers">
             <list>
+                <ref bean="preMarketTradingEventDispatcher"/>
                 <ref bean="dayTradingEventDispatcher"/>
                 <ref bean="afterMarketTradingEventDispatcher"/>
             </list>

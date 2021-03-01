@@ -1,6 +1,7 @@
 package exchanges.dispatchers.telegram
 
 import exchanges.TickerEvent
+import ifFalse
 import ifTrue
 import org.apache.logging.log4j.LogManager
 import java.util.Calendar
@@ -14,6 +15,8 @@ class TelegramTimeRestrictedEventDispatcher(
 
     override fun accept(event: TickerEvent): Boolean =
         delegate.accept(event) && (calendar.get(Calendar.HOUR_OF_DAY) in range).ifTrue {
-            logger.info("Range: $range, Hour: ${calendar.get(Calendar.HOUR_OF_DAY)}")
+            logger.info("ACCEPTED: Range: $range, Hour: ${calendar.get(Calendar.HOUR_OF_DAY)}")
+        }.ifFalse {
+            logger.info("DENIED: Range: $range, Hour: ${calendar.get(Calendar.HOUR_OF_DAY)}")
         }
 }
