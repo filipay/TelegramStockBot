@@ -3,6 +3,7 @@ package functional
 import App
 import exchanges.adapter.KrakenExchangeAdapter
 import exchanges.adapter.YahooFinanceAdapter
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import messaging.TelegramBotMessenger
@@ -13,8 +14,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import java.time.Clock
-import java.time.Instant
-import java.util.Calendar
 import java.util.Timer
 
 
@@ -37,24 +36,19 @@ open class BaseFunctionalTest {
     protected lateinit var krakenExchangeAdapter: KrakenExchangeAdapter
 
     @Autowired
-    protected lateinit var calendar: Calendar
-
-    @Autowired
     protected lateinit var clock: Clock
-
-    @Autowired
-    protected lateinit var now: Instant
 
     @BeforeEach
     fun setup() {
+        clearMocks(messenger)
+
         every { timer.schedule(any(), any<Long>(), any()) } answers {
             (firstArg() as Runnable).run()
         }
-
         every { messenger.execute(any<SendMessage>()) } returns mockk()
-
-        every { yahooFinanceAdapter.stocks(any()) } returns mapOf("GME" to mockk(relaxed = true))
-
+        every { yahooFinanceAdapter.stocks(any()) } returns mapOf("GME" to mockk(relaxed = true) {
+            every { name } returns "GME"
+        })
         every { krakenExchangeAdapter.cryptos(any()) } returns listOf(mockk(relaxed = true) {
             every { name } returns "BTC/EUR"
         })

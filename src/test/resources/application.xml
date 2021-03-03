@@ -18,11 +18,6 @@
         <constructor-arg name="relaxed" value="true"/>
     </bean>
 
-    <bean id="calendar" class="Mocker" factory-method="mockk">
-        <constructor-arg name="mockType" value="java.util.Calendar"/>
-        <constructor-arg name="relaxed" value="true"/>
-    </bean>
-
     <bean id="clock" class="Mocker" factory-method="mockk">
         <constructor-arg name="mockType" value="java.time.Clock"/>
         <constructor-arg name="relaxed" value="true"/>

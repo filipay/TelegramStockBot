@@ -3,35 +3,28 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean name="10minutePeriod" class="java.time.Duration" factory-method="ofMinutes">
-        <constructor-arg name="minutes" value="10"/>
-    </bean>
-
-    <bean name="30minutePeriod" class="java.time.Duration" factory-method="ofMinutes">
-        <constructor-arg name="minutes" value="30"/>
-    </bean>
-
     <bean name="now" class="java.time.Instant" factory-method="now"/>
 
-    <bean id="telegram10MinuteEvent" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
+    <bean name="telegramPeriodicEventDispatcherFactory" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcherFactory">
         <constructor-arg name="messenger" ref="messenger"/>
-        <constructor-arg name="period" ref="10minutePeriod"/>
         <constructor-arg name="previousEvent" ref="now"/>
         <constructor-arg name="formatter" ref="tickerFormatter"/>
     </bean>
 
-    <bean id="telegram30MinuteEvent" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
-        <constructor-arg name="messenger" ref="messenger"/>
-        <constructor-arg name="period" ref="30minutePeriod"/>
-        <constructor-arg name="previousEvent" ref="now"/>
-        <constructor-arg name="formatter" ref="tickerFormatter"/>
+    <bean id="telegram15MinuteDayMarketEventDispatcher" factory-bean="telegramPeriodicEventDispatcherFactory" factory-method="create">
+        <constructor-arg name="periodInMinutes" value="15"/>
     </bean>
 
-    <bean id="telegram30MinuteEvent2" class="exchanges.dispatchers.telegram.TelegramPeriodicEventDispatcher">
-        <constructor-arg name="messenger" ref="messenger"/>
-        <constructor-arg name="period" ref="30minutePeriod"/>
-        <constructor-arg name="previousEvent" ref="now"/>
-        <constructor-arg name="formatter" ref="tickerFormatter"/>
+    <bean id="telegram30MinuteAfterMarketEventDispatcher" factory-bean="telegramPeriodicEventDispatcherFactory" factory-method="create">
+        <constructor-arg name="periodInMinutes" value="30"/>
+    </bean>
+
+    <bean id="telegramHourlyPreMarketEventDispatcher" factory-bean="telegramPeriodicEventDispatcherFactory" factory-method="create">
+        <constructor-arg name="period">
+            <bean class="java.time.Duration" factory-method="ofHours">
+                <constructor-arg value="1"/>
+            </bean>
+        </constructor-arg>
     </bean>
 
     <bean name="dayTradingHoursRange" class="kotlin.ranges.IntRange">
@@ -50,20 +43,17 @@
     </bean>
 
     <bean id="dayTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
-        <constructor-arg name="calendar" ref="calendar"/>
-        <constructor-arg name="delegate" ref="telegram10MinuteEvent"/>
+        <constructor-arg name="delegate" ref="telegram15MinuteDayMarketEventDispatcher"/>
         <constructor-arg name="range" ref="dayTradingHoursRange"/>
     </bean>
 
     <bean id="afterMarketTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
-        <constructor-arg name="calendar" ref="calendar"/>
-        <constructor-arg name="delegate" ref="telegram30MinuteEvent"/>
+        <constructor-arg name="delegate" ref="telegram30MinuteAfterMarketEventDispatcher"/>
         <constructor-arg name="range" ref="afterMarketTradingHoursRange"/>
     </bean>
 
     <bean id="preMarketTradingEventDispatcher" class="exchanges.dispatchers.telegram.TelegramTimeRestrictedEventDispatcher">
-        <constructor-arg name="calendar" ref="calendar"/>
-        <constructor-arg name="delegate" ref="telegram30MinuteEvent2"/>
+        <constructor-arg name="delegate" ref="telegramHourlyPreMarketEventDispatcher"/>
         <constructor-arg name="range" ref="preMarketTradingHoursRange"/>
     </bean>
 
