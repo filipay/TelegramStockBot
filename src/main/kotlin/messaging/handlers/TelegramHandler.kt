@@ -7,5 +7,6 @@ interface TelegramHandler {
 }
 
 interface ConditionalTelegramHandler: TelegramHandler {
-    fun accept(update: Update): Boolean
+    fun accept(update: Update): Boolean = true
 }
+

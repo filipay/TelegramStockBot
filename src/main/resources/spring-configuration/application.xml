@@ -10,7 +10,7 @@
 
     <bean id="timer" class="java.util.Timer"/>
     <bean id="pollingFrequency" class="java.time.Duration" factory-method="ofSeconds">
-        <constructor-arg name="seconds" value="2"/>
+        <constructor-arg name="seconds" value="30"/>
     </bean>
 
     <bean id="yahooStockProcessor" class="exchanges.processor.YahooStockProcessor">

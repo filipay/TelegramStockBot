@@ -44,7 +44,10 @@
         <constructor-arg name="handlerStrategy">
             <map>
                 <entry key="/stonk" value-ref="stockCommandTelegramHandler"/>
+                <entry key="/stock" value-ref="stockCommandTelegramHandler"/>
                 <entry key="/crypto" value-ref="cryptoCommandTelegramHandler"/>
+                <entry key="/stop" value-ref="stopStartSuperUserCommandTelegramHandler"/>
+                <entry key="/start" value-ref="stopStartSuperUserCommandTelegramHandler"/>
             </map>
         </constructor-arg>
     </bean>
@@ -59,5 +62,20 @@
         <constructor-arg name="messenger" ref="messenger"/>
         <constructor-arg name="krakenExchangeAdapter" ref="krakenExchangeAdapter"/>
         <constructor-arg name="formatter" ref="tickerFormatter"/>
+    </bean>
+
+    <bean id="stopStartSuperUserCommandTelegramHandler" class="messaging.handlers.commands.SuperUserCommandTelegramHandler">
+        <constructor-arg name="delegate">
+            <bean class="messaging.handlers.commands.StopStartCommandTelegramHandler">
+                <constructor-arg name="app" ref="app"/>
+                <constructor-arg name="messenger" ref="messenger"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="superUsers">
+            <set>
+                <value>438053205</value>
+            </set>
+        </constructor-arg>
+        <constructor-arg name="messenger" ref="messenger"/>
     </bean>
 </beans>

@@ -3,7 +3,7 @@ package messaging.handlers.commands
 import exchanges.Ticker
 import exchanges.adapter.KrakenExchangeAdapter
 import messaging.Formatter
-import messaging.handlers.TelegramHandler
+import messaging.handlers.ConditionalTelegramHandler
 import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -13,7 +13,7 @@ class CryptoCommandTelegramHandler(
     private val messenger: AbsSender,
     private val krakenExchangeAdapter: KrakenExchangeAdapter,
     private val formatter: Formatter<Ticker>
-): TelegramHandler {
+): ConditionalTelegramHandler {
     override fun handle(update: Update) {
         val (_, cryptoSymbol) = update.message.text.split("\\s".toRegex())
         val ticker = krakenExchangeAdapter.crypto(cryptoSymbol)

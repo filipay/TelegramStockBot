@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 import java.time.Clock
 import java.time.Duration
 import java.util.Timer
+import java.util.TimerTask
 import kotlin.concurrent.schedule
 
 class App(
@@ -14,10 +15,11 @@ class App(
     private val pollingFrequency: Duration
 ) {
     private val logger = LogManager.getLogger(App::class.java)
+    private var task: TimerTask? = null
 
     fun run() {
         logger.info("Starting processing with polling frequency of: ${pollingFrequency.seconds}s")
-        timer.schedule(0, pollingFrequency.toMillis()) {
+        task = timer.schedule(0, pollingFrequency.toMillis()) {
             runCatching {
                 processors.forEach { it.process(Event(clock.instant())) }
             }.onFailure {
@@ -25,6 +27,16 @@ class App(
             }
         }
     }
+
+    fun stop() {
+        task?.let {
+            logger.info("Cancelling the task", it)
+            it.cancel()
+        }
+        task = null
+    }
+
+    fun isRunning() = task != null
 }
 
 fun main() {
