@@ -46,10 +46,10 @@ open class BaseFunctionalTest {
             (firstArg() as Runnable).run()
         }
         every { messenger.execute(any<SendMessage>()) } returns mockk()
-        every { yahooFinanceAdapter.stocks(any()) } returns mapOf("GME" to mockk(relaxed = true) {
+        every { yahooFinanceAdapter.tickers(any()) } returns listOf(mockk(relaxed = true) {
             every { name } returns "GME"
         })
-        every { krakenExchangeAdapter.cryptos(any()) } returns listOf(mockk(relaxed = true) {
+        every { krakenExchangeAdapter.tickers(any()) } returns listOf(mockk(relaxed = true) {
             every { name } returns "BTC/EUR"
         })
     }

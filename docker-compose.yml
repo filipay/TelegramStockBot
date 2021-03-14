@@ -1,0 +1,60 @@
+version: '3'
+services:
+  telegram_stock_bot:
+    environment:
+      - API_TOKEN
+      - CHAT_ID
+    build: '.'
+    links:
+      - telegraf
+    depends_on:
+      - telegraf
+  influxdb:
+    image: quay.io/influxdb/influxdb:v2.0.3
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - influxdbv2:/.influxdbv2
+    ports:
+      - "8086:8086"
+    expose:
+      - "8086"
+  # Use the influx cli to set up an influxdb instance.
+  influxdb_cli:
+    environment:
+      - INFLUXDB_TOKEN
+      - INFLUXDB_BUCKET_NAME
+      - INFLUXDB_ORG_NAME
+      - INFLUXDB_USERNAME
+      - INFLUXDB_PASSWORD
+    links:
+      - influxdb
+    image: quay.io/influxdb/influxdb:v2.0.3
+    # Use these same configurations parameters in your telegraf configuration, telegraf.conf.
+    entrypoint: "influx setup \
+    --bucket ${INFLUXDB_BUCKET_NAME} \
+    -t ${INFLUXDB_TOKEN} \
+    -o ${INFLUXDB_ORG_NAME} \
+    --username=${INFLUXDB_USERNAME} \
+    --password=${INFLUXDB_PASSWORD} \
+    --host=http://influxdb:8086 \
+    -f"
+    # Wait for the influxd service in the influxdb container has fully bootstrapped before trying to setup an influxdb instance with the influxdb_cli service.
+    restart: on-failure:10
+    depends_on:
+      - influxdb
+  telegraf:
+    environment:
+      - INFLUXDB_TOKEN
+      - INFLUXDB_BUCKET_NAME
+      - INFLUXDB_ORG_NAME
+    image: telegraf
+    links:
+      - influxdb
+    volumes:
+      # Mount for telegraf config
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    depends_on:
+      - influxdb_cli
+volumes:
+  influxdbv2:
+

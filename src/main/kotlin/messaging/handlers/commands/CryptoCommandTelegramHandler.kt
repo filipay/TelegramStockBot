@@ -16,7 +16,7 @@ class CryptoCommandTelegramHandler(
 ): ConditionalTelegramHandler {
     override fun handle(update: Update) {
         val (_, cryptoSymbol) = update.message.text.split("\\s".toRegex())
-        val ticker = krakenExchangeAdapter.crypto(cryptoSymbol)
+        val ticker = krakenExchangeAdapter.ticker(cryptoSymbol)
         val message = SendMessage.builder()
             .chatId(update.message.chatId.toString())
             .text(formatter.format(ticker))

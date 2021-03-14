@@ -1,8 +1,9 @@
 package exchanges.processor
 
+import com.influxdb.client.InfluxDBClient
 import exchanges.Event
 import exchanges.TickerEvent
-import exchanges.adapter.YahooFinanceAdapter
+import exchanges.adapter.TickerAdapter
 import exchanges.dispatchers.EventDispatcher
 import io.mockk.every
 import io.mockk.mockk
@@ -10,13 +11,14 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
-internal class YahooStockProcessorTest {
+internal class TickerProcessorTest {
     private val eventDispatcher1: EventDispatcher<TickerEvent> = mockk(relaxed = true)
     private val eventDispatcher2: EventDispatcher<TickerEvent> = mockk(relaxed = true)
-    private val yahooFinanceAdapter: YahooFinanceAdapter = mockk {
-        every { stocks(any()) } returns mapOf("POO" to mockk())
+    private val client: InfluxDBClient = mockk(relaxed = true)
+    private val tickerAdapter: TickerAdapter = mockk {
+        every { tickers(any()) } returns listOf(mockk(relaxed = true))
     }
-    private val processor = YahooStockProcessor(listOf("POO"), listOf(eventDispatcher1, eventDispatcher2), yahooFinanceAdapter)
+    private val processor = TickerProcessor(listOf("POO"), listOf(eventDispatcher1, eventDispatcher2), tickerAdapter, client)
 
     @Test
     fun `should call listeners about the event`() {

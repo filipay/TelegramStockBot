@@ -29,6 +29,7 @@ dependencies {
     implementation("org.knowm.xchange:xchange-kraken:5.0.6")
     implementation("org.apache.logging.log4j:log4j-api:2.14.0")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
+    implementation("com.influxdb:influxdb-client-kotlin:2.0.0")
 
     testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

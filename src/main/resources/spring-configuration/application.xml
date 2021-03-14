@@ -10,30 +10,33 @@
 
     <bean id="timer" class="java.util.Timer"/>
     <bean id="pollingFrequency" class="java.time.Duration" factory-method="ofSeconds">
-        <constructor-arg name="seconds" value="30"/>
+        <constructor-arg name="seconds" value="5"/>
     </bean>
 
-    <bean id="yahooStockProcessor" class="exchanges.processor.YahooStockProcessor">
+    <bean id="influxDBClient" class="com.influxdb.client.InfluxDBClientFactory" factory-method="create"/>
+
+    <bean id="yahooStockProcessor" class="exchanges.processor.TickerProcessor">
         <constructor-arg name="dispatchers">
             <list>
                 <ref bean="telegramEventDispatcher"/>
             </list>
         </constructor-arg>
-        <constructor-arg name="stocks">
+        <constructor-arg name="symbols">
             <list>
                 <value>GME</value>
             </list>
         </constructor-arg>
-        <constructor-arg name="yahooFinanceAdapter" ref="yahooFinanceAdapter"/>
+        <constructor-arg name="tickerAdapter" ref="yahooFinanceAdapter"/>
+        <constructor-arg name="influxDBClient" ref="influxDBClient"/>
     </bean>
 
-    <bean id="krakenExchangeProcessor" class="exchanges.processor.KrakenExchangeProcessor">
+    <bean id="krakenExchangeProcessor" class="exchanges.processor.TickerProcessor">
         <constructor-arg name="dispatchers">
             <list>
                 <ref bean="telegramEventDispatcher"/>
             </list>
         </constructor-arg>
-        <constructor-arg name="cryptos">
+        <constructor-arg name="symbols">
             <list>
                 <value>XMR</value>
                 <value>NANO</value>
@@ -42,7 +45,8 @@
                 <value>ADA</value>
             </list>
         </constructor-arg>
-        <constructor-arg name="krakenExchangeAdapter" ref="krakenExchangeAdapter"/>
+        <constructor-arg name="tickerAdapter" ref="krakenExchangeAdapter"/>
+        <constructor-arg name="influxDBClient" ref="influxDBClient"/>
     </bean>
 
     <bean id="app" class="App">

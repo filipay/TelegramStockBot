@@ -16,7 +16,7 @@ class StockCommandTelegramHandler(
 ): ConditionalTelegramHandler {
     override fun handle(update: Update) {
         val (_, stockName) = update.message.text.split("\\s".toRegex())
-        val ticker = yahooFinanceAdapter.stock(stockName)
+        val ticker = yahooFinanceAdapter.ticker(stockName)
         val message = SendMessage.builder()
             .chatId(update.message.chatId.toString())
             .text(formatter.format(ticker))

@@ -31,4 +31,9 @@
         <constructor-arg name="apiToken" value="1234567890:blah"/>
         <constructor-arg name="chatId" value="-987654321"/>
     </bean>
+
+    <bean name="influxDBClient" class="Mocker" factory-method="mockk">
+        <constructor-arg name="mockType" value="com.influxdb.client.InfluxDBClient"/>
+        <constructor-arg name="relaxed" value="true"/>
+    </bean>
 </beans>

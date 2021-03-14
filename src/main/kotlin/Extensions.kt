@@ -11,3 +11,8 @@ infix fun Boolean.ifFalse(block: () -> Unit): Boolean {
     }
     return this
 }
+
+fun <T: AutoCloseable> T.use(block: (T) -> Unit) {
+    block(this)
+    close()
+}
