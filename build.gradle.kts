@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.30"
     application
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
@@ -20,9 +20,8 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
     implementation("com.yahoofinance-api:YahooFinanceAPI:3.15.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.telegram:telegrambots:5.0.1")
     implementation("org.springframework:spring-core:5.3.3")
     implementation("org.springframework:spring-context:5.3.3")

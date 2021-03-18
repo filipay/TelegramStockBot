@@ -1,6 +1,5 @@
 package exchanges.processor
 
-import com.influxdb.client.InfluxDBClient
 import exchanges.Event
 import exchanges.TickerEvent
 import exchanges.adapter.TickerAdapter
@@ -14,11 +13,10 @@ import java.time.Instant
 internal class TickerProcessorTest {
     private val eventDispatcher1: EventDispatcher<TickerEvent> = mockk(relaxed = true)
     private val eventDispatcher2: EventDispatcher<TickerEvent> = mockk(relaxed = true)
-    private val client: InfluxDBClient = mockk(relaxed = true)
     private val tickerAdapter: TickerAdapter = mockk {
         every { tickers(any()) } returns listOf(mockk(relaxed = true))
     }
-    private val processor = TickerProcessor(listOf("POO"), listOf(eventDispatcher1, eventDispatcher2), tickerAdapter, client)
+    private val processor = TickerProcessor(listOf("POO"), listOf(eventDispatcher1, eventDispatcher2), tickerAdapter)
 
     @Test
     fun `should call listeners about the event`() {

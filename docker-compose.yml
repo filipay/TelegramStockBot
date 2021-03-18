@@ -5,12 +5,13 @@ services:
       - API_TOKEN
       - CHAT_ID
     build: '.'
+    image: telegram_stock_bot
     links:
       - telegraf
     depends_on:
       - telegraf
   influxdb:
-    image: quay.io/influxdb/influxdb:v2.0.3
+    image: ${ARCH}/influxdb:latest
     volumes:
       # Mount for influxdb data directory and configuration
       - influxdbv2:/.influxdbv2
@@ -28,7 +29,7 @@ services:
       - INFLUXDB_PASSWORD
     links:
       - influxdb
-    image: quay.io/influxdb/influxdb:v2.0.3
+    image: ${ARCH}/influxdb:latest
     # Use these same configurations parameters in your telegraf configuration, telegraf.conf.
     entrypoint: "influx setup \
     --bucket ${INFLUXDB_BUCKET_NAME} \
@@ -47,7 +48,7 @@ services:
       - INFLUXDB_TOKEN
       - INFLUXDB_BUCKET_NAME
       - INFLUXDB_ORG_NAME
-    image: telegraf
+    image: ${ARCH}/telegraf
     links:
       - influxdb
     volumes:
@@ -57,4 +58,3 @@ services:
       - influxdb_cli
 volumes:
   influxdbv2:
-

@@ -5,8 +5,7 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd">
     <import resource="common.xml"/>
     <import resource="telegram/telegram-bot.xml"/>
-    <import resource="exchanges/event-dispatchers.xml"/>
-    <import resource="exchanges/adapters.xml"/>
+    <import resource="exchanges/*"/>
 
     <bean id="timer" class="java.util.Timer"/>
     <bean id="pollingFrequency" class="java.time.Duration" factory-method="ofSeconds">
@@ -19,6 +18,7 @@
         <constructor-arg name="dispatchers">
             <list>
                 <ref bean="telegramEventDispatcher"/>
+                <ref bean="influxDBEventDispatcher"/>
             </list>
         </constructor-arg>
         <constructor-arg name="symbols">
@@ -27,7 +27,6 @@
             </list>
         </constructor-arg>
         <constructor-arg name="tickerAdapter" ref="yahooFinanceAdapter"/>
-        <constructor-arg name="influxDBClient" ref="influxDBClient"/>
     </bean>
 
     <bean id="krakenExchangeProcessor" class="exchanges.processor.TickerProcessor">
@@ -46,7 +45,6 @@
             </list>
         </constructor-arg>
         <constructor-arg name="tickerAdapter" ref="krakenExchangeAdapter"/>
-        <constructor-arg name="influxDBClient" ref="influxDBClient"/>
     </bean>
 
     <bean id="app" class="App">
