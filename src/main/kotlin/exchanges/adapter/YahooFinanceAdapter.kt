@@ -7,8 +7,10 @@ import yahoofinance.YahooFinance
 
 class YahooFinanceAdapter(private val mapper: Mapper<Stock, Ticker>) : TickerAdapter {
     override fun ticker(symbol: String): Ticker = mapper.map(YahooFinance.get(symbol))
-    override fun tickers(symbols: List<String>): List<Ticker> =
+    override fun tickers(symbols: List<String>): List<Ticker> = runCatching {
         YahooFinance.get(symbols.toTypedArray())
             .values
             .map { mapper.map(it) }
+    }.getOrDefault(listOf())
+
 }

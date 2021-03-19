@@ -7,9 +7,12 @@ import exchanges.dispatchers.EventDispatcher
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
+@ExperimentalCoroutinesApi
 internal class TickerProcessorTest {
     private val eventDispatcher1: EventDispatcher<TickerEvent> = mockk(relaxed = true)
     private val eventDispatcher2: EventDispatcher<TickerEvent> = mockk(relaxed = true)
@@ -21,7 +24,7 @@ internal class TickerProcessorTest {
     @Test
     fun `should call listeners about the event`() {
         val instant = Instant.ofEpochMilli(0)
-        processor.process(Event(instant))
+        runBlockingTest { processor.process(Event(instant)) }
         verify(exactly = 1) {
             eventDispatcher1.onEvent(any())
             eventDispatcher2.onEvent(any())

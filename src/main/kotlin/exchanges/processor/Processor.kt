@@ -3,5 +3,5 @@ package exchanges.processor
 import exchanges.Event
 
 interface Processor {
-    fun process(event: Event)
+    suspend fun process(event: Event)
 }

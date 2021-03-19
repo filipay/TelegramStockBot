@@ -30,6 +30,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("com.influxdb:influxdb-client-kotlin:2.0.0")
 
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
     testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")

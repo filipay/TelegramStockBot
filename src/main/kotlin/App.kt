@@ -1,5 +1,8 @@
 import exchanges.Event
 import exchanges.processor.Processor
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import org.apache.logging.log4j.LogManager
 import org.springframework.context.support.ClassPathXmlApplicationContext
 import java.time.Clock
@@ -20,10 +23,12 @@ class App(
     fun run() {
         logger.info("Starting processing with polling frequency of: ${pollingFrequency.seconds}s")
         task = timer.schedule(0, pollingFrequency.toMillis()) {
-            runCatching {
-                processors.forEach { it.process(Event(clock.instant())) }
-            }.onFailure {
-                logger.error("Process failed", it)
+            runBlocking {
+                runCatching {
+                    processors.map { async { it.process(Event(clock.instant())) } }.awaitAll()
+                }.onFailure {
+                    logger.error("Process failed", it)
+                }
             }
         }
     }

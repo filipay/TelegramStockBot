@@ -13,7 +13,7 @@ class TickerProcessor(
 ) : Processor {
     private val logger = LogManager.getLogger(TickerProcessor::class.java)
 
-    override fun process(event: Event) {
+    override suspend fun process(event: Event) {
         logger.info("Processing event with ${tickerAdapter::class.java}", event)
         val tickers = tickerAdapter.tickers(symbols)
         dispatchers.forEach { dispatcher ->
